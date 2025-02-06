@@ -1,5 +1,5 @@
 import type { Config } from "tailwindcss";
-
+import { heroui } from "@heroui/react";
 export default {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,5 +14,6 @@ export default {
       },
     },
   },
-  plugins: [],
+  darkMode: "class",
+  plugins: [heroui()],
 } satisfies Config;
