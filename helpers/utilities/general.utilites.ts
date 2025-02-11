@@ -10,7 +10,7 @@ export const filterAndSetParams = ({
   queryParams,
 }: {
   params: URLSearchParams;
-  queryParams: Record<string, any>;
+  queryParams: Record<string, string | number | boolean>;
 }) => {
   for (const [key, value] of Object.entries(queryParams)) {
     // Ensure value is neither null, undefined, nor an empty string

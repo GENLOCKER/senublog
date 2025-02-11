@@ -8,7 +8,7 @@ const blogApi: BlogApiType = {
   createBlog: async (payload) => await privateInstance.post("/blogs", payload),
 
   fetchBlogs: async ({ ...queryParams }) => {
-    const params = new URLSearchParams(queryParams as any);
+    const params = new URLSearchParams(queryParams);
     filterAndSetParams({ params, queryParams });
     return await privateInstance.get(`/blogs?${params.toString()}`);
   },

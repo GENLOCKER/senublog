@@ -26,7 +26,9 @@ export default function CommentList({ blogId }: { blogId: string }) {
   useEffect(() => {
     const loadComments = async () => {
       try {
-        const response = await commentApi.getComments({ blogId });
+        const response = await commentApi.getComments({
+          populate: "author",
+        }); // Use populate for author
         setComments(response.data.data);
       } catch (err) {
         setError("Failed to load comments");
@@ -41,20 +43,16 @@ export default function CommentList({ blogId }: { blogId: string }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
-
     try {
       const response = await commentApi.createComment({
         body: newComment,
         blog: blogId,
         author: authorId,
       });
-
-      // Add a fallback createdAt if missing
       const newCommentWithDate = {
         ...response.data,
         createdAt: response.data.createdAt || new Date().toISOString(),
       };
-
       setComments([newCommentWithDate, ...comments]); // Add new comment to the top
       setNewComment("");
     } catch (err) {
@@ -80,7 +78,6 @@ export default function CommentList({ blogId }: { blogId: string }) {
   return (
     <div className="mt-12">
       <h2 className="text-2xl font-bold mb-6">Comments</h2>
-
       {/* Comment Form */}
       <form onSubmit={handleSubmit} className="mb-8">
         <textarea
@@ -97,7 +94,6 @@ export default function CommentList({ blogId }: { blogId: string }) {
           Post Comment
         </button>
       </form>
-
       {/* Comments List */}
       <div className="space-y-6">
         {comments?.map((comment) => (
@@ -108,13 +104,13 @@ export default function CommentList({ blogId }: { blogId: string }) {
             <div className="flex justify-between items-start mb-4">
               <div>
                 <h3 className="font-semibold text-gray-800">
-                  {comment.authorName}
+                  {comment.author || "Unknown"}{" "}
+                  {/* Use populated author name */}
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">
                   {formatDate(comment.createdAt)}
                 </p>
               </div>
-              {/* Delete Button */}
               <button
                 onClick={() => handleDelete(comment._id)}
                 className="text-sm text-red-600 hover:text-red-800"

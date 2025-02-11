@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
 import React, { useEffect, useState } from "react";
+import Navbar from "./NavBar";
 
 const AppLayout = ({
   children,
@@ -37,6 +38,7 @@ const AppLayout = ({
                 position="top-right"
                 hideProgressBar
               />
+              <Navbar />
               {children}
             </HeroUIProvider>
           </QueryClientProvider>

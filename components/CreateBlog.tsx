@@ -1,28 +1,48 @@
-/** @format */
 "use client";
-import blogApi from "@/axios/blog.api";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import blogApi from "@/axios/blog.api";
+import Cookies from "js-cookie";
 
 export default function CreateBlog() {
   const [title, setTitle] = useState("");
   const [snippet, setSnippet] = useState("");
   const [body, setBody] = useState("");
+  const router = useRouter();
 
-  const handleCreateBlog = async () => {
-    try {
-      await blogApi.createBlog({ title, snippet, body });
+  const token = Cookies.get("auth"); // Retrieve token from cookies
+
+  // Define the mutation for creating a blog
+  const createBlogMutation = useMutation({
+    mutationFn: (payload) => blogApi.createBlog(payload, token), // Pass token dynamically
+    onSuccess: () => {
       toast.success("Blog created successfully!");
       setTitle("");
       setSnippet("");
       setBody("");
-    } catch (error: any) {
-      toast.error(
-        `Failed to create blog: ${
-          error.response?.data?.message || error.message
-        }`
-      );
+      router.push("/blog");
+    },
+    onError: (error: any) => {
+      if (error.response?.status === 401) {
+        toast.error("Authentication failed. Please log in again.");
+      } else {
+        toast.error(
+          `Failed to create blog: ${
+            error.response?.data?.message || error.message
+          }`
+        );
+      }
+    },
+  });
+
+  const handleCreateBlog = () => {
+    if (!token) {
+      toast.error("Authentication required. Please log in.");
+      return;
     }
+    createBlogMutation.mutate({ title, snippet, body }); // Trigger the mutation
   };
 
   return (
@@ -51,8 +71,9 @@ export default function CreateBlog() {
       <button
         onClick={handleCreateBlog}
         className="p-2 bg-blue-500 text-white rounded"
+        disabled={createBlogMutation.isLoading}
       >
-        Create Blog
+        {createBlogMutation.isLoading ? "Creating..." : "Create Blog"}
       </button>
     </div>
   );

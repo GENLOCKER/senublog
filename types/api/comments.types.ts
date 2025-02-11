@@ -23,7 +23,7 @@ export type UpdateCommentPayload = {
 export type GetCommentsParams = {
   page?: number;
   limit?: number;
-  blogId?: string;
+  // blogId?: string;
 };
 
 export type CommentsResponse = {

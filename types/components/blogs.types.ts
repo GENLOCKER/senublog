@@ -7,11 +7,14 @@ export type Blog = {
   body: string;
   createdAt?: string;
   updatedAt?: string;
+  author?: { _id: string; name: string };
+  comments?: { _id: string; content: string; createdAt: string }[];
 };
 
 export type FetchBlogType = {
   page: number;
   limit: number;
+  populate?: string;
 };
 
 export type BlogResponse = {

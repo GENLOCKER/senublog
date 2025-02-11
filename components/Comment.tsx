@@ -13,14 +13,15 @@ export default function CommentItem({
   onDelete: (id: string) => void;
   onUpdate: (id: string, content: string) => void;
 }) {
-  // Single user configuration
-  const currentUserId = "user-123"; // Hardcoded single user ID
   const [isEditing, setIsEditing] = useState(false);
-  const [content, setContent] = useState(comment.content);
+  const [content, setContent] = useState(comment.body);
 
   const handleUpdate = async () => {
     try {
-      await commentApi.updateComment({ id: comment._id, payload: { content } });
+      await commentApi.updateComment({
+        id: comment._id,
+        payload: { body: content },
+      });
       onUpdate(comment._id, content);
       setIsEditing(false);
     } catch (error) {
@@ -43,13 +44,13 @@ export default function CommentItem({
     <div className="p-4 border rounded-lg mb-4 bg-white shadow-sm">
       <div className="flex justify-between items-start mb-2">
         <div>
-          <h4 className="font-medium text-gray-800">{comment.authorName}</h4>
+          <h4 className="font-medium text-gray-800">
+            {comment.authorName || "Unknown"}
+          </h4>
           <p className="text-sm text-gray-500">
             {format(new Date(comment.createdAt), "MMM d, yyyy 'at' HH:mm")}
           </p>
         </div>
-
-        {/* Always show controls for single user system */}
         <div className="flex gap-2">
           <button
             onClick={() => setIsEditing(!isEditing)}
@@ -65,7 +66,6 @@ export default function CommentItem({
           </button>
         </div>
       </div>
-
       {isEditing ? (
         <div className="space-y-2">
           <textarea
@@ -82,7 +82,7 @@ export default function CommentItem({
           </button>
         </div>
       ) : (
-        <p className="text-gray-700 whitespace-pre-wrap">{comment.content}</p>
+        <p className="text-gray-700 whitespace-pre-wrap">{comment.body}</p>
       )}
     </div>
   );

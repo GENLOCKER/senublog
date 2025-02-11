@@ -6,7 +6,7 @@ const commentApi: CommentApiType = {
 
   getComments: (params) => {
     const queryParams = new URLSearchParams({
-      blogId: params.blogId || "", // Ensure blogId is included
+      // blogId: params.blogId || "", // Ensure blogId is included
       page: params.page?.toString() || "1", // Default to page 1
       limit: params.limit?.toString() || "10", // Default to 10 comments per page
     }).toString();
