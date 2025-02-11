@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { logout } from "@/redux/features/auth.slice";
 import Link from "next/link";
-import Cookies from "js-cookie";
 
 export default function Navbar() {
   const router = useRouter();

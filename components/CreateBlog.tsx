@@ -71,9 +71,9 @@ export default function CreateBlog() {
       <button
         onClick={handleCreateBlog}
         className="p-2 bg-blue-500 text-white rounded"
-        disabled={createBlogMutation.isLoading}
+        disabled={createBlogMutation.isPending}
       >
-        {createBlogMutation.isLoading ? "Creating..." : "Create Blog"}
+        {createBlogMutation.isPending ? "Creating..." : "Create Blog"}
       </button>
     </div>
   );

@@ -9,14 +9,13 @@ import Link from "next/link";
 export default function BlogList() {
   const router = useRouter();
 
-  // Fetch the list of blogs using React Query with 'populate' parameter
   const { data, isLoading, isError, refetch } = useQuery<BlogResponse>({
-    queryKey: ["blogs", { page: 1, limit: 10, populate: "author,comments" }], // Include populate in queryKey
+    queryKey: ["blogs", { page: 1, limit: 10, populate: "author,comments" }],
     queryFn: () =>
       blogApi
-        .fetchBlogs({ page: 1, limit: 10, populate: "author,comments" }) // Add populate parameter
+        .fetchBlogs({ page: 1, limit: 10, populate: "author,comments" })
         .then((response) => response.data),
-    enabled: true, // Ensure the query runs when the component mounts
+    enabled: true,
   });
 
   const handleDelete = async (blogId: string) => {

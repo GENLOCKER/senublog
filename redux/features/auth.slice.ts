@@ -31,7 +31,7 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       state.isAuthenticated = false;
-      state.user = null as any;
+      state.user = null;
 
       Cookies.remove("auth");
       localStorage.removeItem("persist:root");
