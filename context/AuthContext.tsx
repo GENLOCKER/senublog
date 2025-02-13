@@ -1,7 +1,7 @@
 // context/AuthContext.tsx
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
-import { User } from "@/types/user.types";
+import { User } from "@/types/components/general.types";
+import { createContext, useEffect, useState } from "react";
 
 type AuthContextType = {
   user: User | null;
@@ -24,6 +24,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = await response.json();
         setUser(data.user);
       } catch (err) {
+        console.error("Failed to load user:", err);
         setError("Failed to load user");
       } finally {
         setIsLoading(false);

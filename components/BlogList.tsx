@@ -25,6 +25,7 @@ export default function BlogList() {
         toast.success("Blog deleted successfully");
         await refetch(); // Refresh the list after deletion
       } catch (error) {
+        console.error("Failed to delete blog:", error);
         toast.error("Failed to delete blog");
       }
     }

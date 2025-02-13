@@ -1,10 +1,18 @@
 "use client";
-
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import authApi from "@/axios/auth.api";
 import { useRouter } from "next/navigation";
+
+// Define the error type
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -17,7 +25,9 @@ export default function ForgotPasswordPage() {
       toast.success("Password reset link sent! Please check your email.");
       router.push("/login"); // Redirect to login page after sending the link
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
+      // Replace 'any' with 'ApiError'
+      console.error("Error sending reset link:", error);
       toast.error(error.response?.data?.message || "Error sending reset link.");
     },
   });

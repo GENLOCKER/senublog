@@ -5,7 +5,13 @@ import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import authApi from "@/axios/auth.api";
-
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 export default function Signup() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -37,7 +43,7 @@ export default function Signup() {
         )}&password=${encodeURIComponent(password)}`
       );
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast.error(
         error.response?.data?.message || "An error occurred during signup"
       );

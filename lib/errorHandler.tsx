@@ -1,18 +1,35 @@
-// import { useRollbar } from "@rollbar/react"
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
 
-export const _handleError = (error: any) => {
-   //  const rollbar = useRollbar()
-   const message = error.response.data.message
-
-   if (Array.isArray(message)) {
-      message.forEach((item: string) => {
-         toast.error(item)
-         //  rollbar.error(item)
-      })
-      return
-   }
-
-   toast.error(error.response.data.message)
-   //  rollbar.error(error.response.data.message)
+// Define the error type
+interface ApiError {
+  response?: {
+    data?: {
+      message: string | string[]; // Message can be a single string or an array of strings
+    };
+  };
 }
+
+// Updated error handling function
+export const _handleError = (error: ApiError) => {
+  if (!error.response || !error.response.data) {
+    toast.error("An unexpected error occurred.");
+    return;
+  }
+
+  const message = error.response.data.message;
+
+  if (Array.isArray(message)) {
+    message.forEach((item: string) => {
+      toast.error(item);
+    });
+    return;
+  }
+
+  if (typeof message === "string") {
+    toast.error(message);
+  } else {
+    toast.error("An unexpected error occurred.");
+  }
+};
+
+export default _handleError;

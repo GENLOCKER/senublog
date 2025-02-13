@@ -21,14 +21,14 @@ const privateInstance = axios.create({
   },
 });
 
-const formDataInstance = axios.create({
-  baseURL: BASEURL,
-  headers: {
-    Accept: "*/*",
-    "Content-Type":
-      "multipart/form-data;boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
-  },
-});
+// const formDataInstance = axios.create({
+//   baseURL: BASEURL,
+//   headers: {
+//     Accept: "*/*",
+//     "Content-Type":
+//       "multipart/form-data;boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW",
+//   },
+// });
 
 // Update both interceptors to use the same logic
 privateInstance.interceptors.request.use((config: any) => {
@@ -39,6 +39,7 @@ privateInstance.interceptors.request.use((config: any) => {
     try {
       token = JSON.parse(authCookie).accessToken || authCookie;
     } catch (error) {
+      console.error("Error parsing auth cookie:", error);
       token = authCookie;
     }
   }
@@ -50,24 +51,25 @@ privateInstance.interceptors.request.use((config: any) => {
   return config;
 });
 
-formDataInstance.interceptors.request.use((config: any) => {
-  const authCookie = Cookies.get("auth");
-  let token = "";
+// formDataInstance.interceptors.request.use((config: any) => {
+//   const authCookie = Cookies.get("auth");
+//   let token = "";
 
-  if (authCookie) {
-    try {
-      token = JSON.parse(authCookie).accessToken || authCookie;
-    } catch (error) {
-      token = authCookie;
-    }
-  }
+//   if (authCookie) {
+//     try {
+//       token = JSON.parse(authCookie).accessToken || authCookie;
+//     } catch (error) {
+//       console.error("Error parsing auth cookie:", error);
+//       token = authCookie;
+//     }
+//   }
 
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+//   if (token) {
+//     config.headers.Authorization = `Bearer ${token}`;
+//   }
 
-  return config;
-});
+//   return config;
+// });
 
 //response interceptors
 publicInstance.interceptors.response.use(
@@ -90,14 +92,14 @@ privateInstance.interceptors.response.use(
   }
 );
 
-formDataInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    _handleError(error);
-    throw error;
-  }
-);
+// formDataInstance.interceptors.response.use(
+//   (response) => {
+//     return response;
+//   },
+//   (error) => {
+//     _handleError(error);
+//     throw error;
+//   }
+// );
 
-export { publicInstance, privateInstance, formDataInstance };
+export { publicInstance, privateInstance };

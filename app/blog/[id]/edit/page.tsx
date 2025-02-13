@@ -36,6 +36,7 @@ export default function EditBlogPage() {
         toast.success("Blog updated successfully");
         router.push(`/blog/${params.id}`);
       } catch (error) {
+        console.error("Failed to update blog:", error);
         toast.error("Failed to update blog");
       }
     },
@@ -52,6 +53,7 @@ export default function EditBlogPage() {
           body: response.data.data.body,
         });
       } catch (error) {
+        console.error("Failed to load blog:", error);
         toast.error("Failed to load blog");
         router.push("/blog");
       } finally {
@@ -60,7 +62,7 @@ export default function EditBlogPage() {
     };
 
     fetchBlog();
-  }, [params.id]);
+  }, [params.id, router, formik]);
 
   if (loading) {
     return (

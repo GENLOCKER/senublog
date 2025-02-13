@@ -20,6 +20,13 @@ const loginSchema = Yup.object().shape({
     .required("Password is required"),
   rememberMe: Yup.boolean().optional(),
 });
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 export default function LoginForm() {
   const router = useRouter();
@@ -65,7 +72,7 @@ export default function LoginForm() {
         router.refresh();
       }, 100);
     },
-    onError: (error: any) => {
+    onError: (error: ApiError) => {
       toast.error(
         error.response?.data?.message || "Login failed. Please try again."
       );

@@ -17,6 +17,7 @@ export default function BlogPage() {
         const response = await blogApi.fetchBlogById(params.id as string);
         setBlog(response.data.data);
       } catch (err) {
+        console.error(err);
         setError("Failed to load blog");
       } finally {
         setLoading(false);

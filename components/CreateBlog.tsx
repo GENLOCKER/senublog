@@ -4,7 +4,16 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import blogApi from "@/axios/blog.api";
-import Cookies from "js-cookie";
+import { Blog } from "@/types/components/blogs.types";
+
+interface ApiError {
+  response?: {
+    status?: number;
+    data?: {
+      message?: string;
+    };
+  };
+}
 
 export default function CreateBlog() {
   const [title, setTitle] = useState("");
@@ -12,11 +21,9 @@ export default function CreateBlog() {
   const [body, setBody] = useState("");
   const router = useRouter();
 
-  const token = Cookies.get("auth"); // Retrieve token from cookies
-
   // Define the mutation for creating a blog
   const createBlogMutation = useMutation({
-    mutationFn: (payload) => blogApi.createBlog(payload, token), // Pass token dynamically
+    mutationFn: (payload: Blog) => blogApi.createBlog(payload), // Ensure payload matches Blog type
     onSuccess: () => {
       toast.success("Blog created successfully!");
       setTitle("");
@@ -24,25 +31,28 @@ export default function CreateBlog() {
       setBody("");
       router.push("/blog");
     },
-    onError: (error: any) => {
-      if (error.response?.status === 401) {
-        toast.error("Authentication failed. Please log in again.");
-      } else {
-        toast.error(
-          `Failed to create blog: ${
-            error.response?.data?.message || error.message
-          }`
-        );
-      }
+    onError: (error: ApiError) => {
+      toast.error(
+        `Failed to create blog: ${
+          error.response?.data?.message || "An error occurred."
+        }`
+      );
     },
   });
 
   const handleCreateBlog = () => {
-    if (!token) {
-      toast.error("Authentication required. Please log in.");
+    if (!title || !snippet || !body) {
+      toast.error("Please fill in all fields.");
       return;
     }
-    createBlogMutation.mutate({ title, snippet, body }); // Trigger the mutation
+
+    const payload: Blog = {
+      title,
+      snippet,
+      body,
+    };
+
+    createBlogMutation.mutate(payload); // Pass the constructed payload
   };
 
   return (

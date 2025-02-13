@@ -8,7 +8,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { PersistGate } from "redux-persist/integration/react";
 import React, { useEffect, useState } from "react";
-import Navbar from "./NavBar";
+import Navbar from "./Navbar";
 
 const AppLayout = ({
   children,

@@ -26,11 +26,10 @@ export default function CommentList({ blogId }: { blogId: string }) {
   useEffect(() => {
     const loadComments = async () => {
       try {
-        const response = await commentApi.getComments({
-          populate: "author",
-        }); // Use populate for author
+        const response = await commentApi.getComments({});
         setComments(response.data.data);
       } catch (err) {
+        console.error("Failed to load comments:", err);
         setError("Failed to load comments");
       } finally {
         setLoading(false);
@@ -56,6 +55,7 @@ export default function CommentList({ blogId }: { blogId: string }) {
       setComments([newCommentWithDate, ...comments]); // Add new comment to the top
       setNewComment("");
     } catch (err) {
+      console.error("Failed to post comment:", err);
       setError("Failed to post comment");
     }
   };
@@ -67,6 +67,7 @@ export default function CommentList({ blogId }: { blogId: string }) {
         await commentApi.deleteComment(commentId);
         setComments(comments.filter((comment) => comment._id !== commentId)); // Remove deleted comment
       } catch (err) {
+        console.error("Failed to delete comment:", err);
         setError("Failed to delete comment");
       }
     }
@@ -103,10 +104,6 @@ export default function CommentList({ blogId }: { blogId: string }) {
           >
             <div className="flex justify-between items-start mb-4">
               <div>
-                <h3 className="font-semibold text-gray-800">
-                  {comment.author || "Unknown"}{" "}
-                  {/* Use populated author name */}
-                </h3>
                 <p className="text-sm text-gray-500 mt-1">
                   {formatDate(comment.createdAt)}
                 </p>
